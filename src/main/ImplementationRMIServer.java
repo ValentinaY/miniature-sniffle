@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public class ImplementationRMIServer extends UnicastRemoteObject implements IRMIServer {
 
 	public ImplementationRMIServer() throws RemoteException{

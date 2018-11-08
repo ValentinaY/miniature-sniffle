@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 //import com.sun.corba.se.impl.protocol.FullServantCacheLocalCRDImpl;
 
@@ -36,6 +35,8 @@ public class Client {
 //			Deberíamos listar 'disposable' en nuestra GUI 
 			ArrayList<String> disposable;
 			disposable = i.getfiles();
+			
+			while(!disposable.isEmpty());
 			
 //			El usuario en la GUI selecciona un nombre (la variable 'selected')
 			String selected ="";
