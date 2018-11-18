@@ -1,0 +1,3 @@
+desde src 'javac main.Client.java' 'javac main.Server.java'
+desde src 'rmic main.ImplementationRMIServer' 'rmic main.ImplementationRMIClient'
+desde src 'rmiregistry 5050'

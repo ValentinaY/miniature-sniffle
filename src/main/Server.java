@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
-
-	@SuppressWarnings("unused")
-	private HashMap<String, ArrayList<Peer> > names;
 	
 	public Server() {
 		try {
