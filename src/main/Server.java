@@ -1,8 +1,6 @@
 package main;
 
 import java.rmi.Naming;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Server {
 	
