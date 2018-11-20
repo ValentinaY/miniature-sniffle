@@ -5,14 +5,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ImplementationRMIClient implements IRMIClient {
-	public ImplementationRMIClient() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+public class Test {
 
-	@Override
-	public String sendme(String name, int line) {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println(sendme("file1",3));
+		for (Integer string : whichline("file4")) {
+			System.out.println(string);
+		}
+	}
+	public static String sendme(String name, int line) {
 		BufferedReader br = null;
 		FileReader fr = null;
 		String sreturn ="";
@@ -32,9 +34,8 @@ public class ImplementationRMIClient implements IRMIClient {
 		}
 		return sreturn;
 	}
-
-	@Override
-	public ArrayList<Integer> whichline(String name) {
+	
+	public static ArrayList<Integer> whichline(String name) {
 		BufferedReader br = null;
 		FileReader fr = null;
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
@@ -53,5 +54,4 @@ public class ImplementationRMIClient implements IRMIClient {
 		}
 		return numbers;
 	}
-
 }
