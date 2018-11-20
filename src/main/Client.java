@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 //import com.sun.corba.se.impl.protocol.FullServantCacheLocalCRDImpl;
 
@@ -39,16 +40,32 @@ public class Client {
 //			Conexión al servidor.
 			String servernameip ="rmi://"+ipserver+":5050/ABC";
 			IRMIServer i = (IRMIServer)(Naming.lookup(servernameip));
+			System.out.println("Lookup realizado con éxito.");
 			
 //			Se envía una lista de los archivos en el directorio.
-			i.ihave(myfiles, myip);
-			
+			boolean t =i.ihave(myfiles, myip);
+			if(t) {
+				System.out.println("Envío exitoso de mi lista de archivos");
+			}
+			else {
+				System.out.println("No se realizó el envío de la lista de archivos.");
+			}
 //			Lista de los archivos en el servidor disponibles para descarga
 //			Deberíamos listar 'disposable' en nuestra GUI 
 			ArrayList<String> disposable;
 			disposable = i.getfiles();
 			
-			while(!disposable.isEmpty());
+			while(disposable.isEmpty()) {
+				System.out.println("No hay archivos en el servidor, esperando actualizaciones.");
+				disposable = i.getfiles();
+				TimeUnit.SECONDS.sleep(3);
+			}
+			System.out.println("Hay archivos en el servidor");
+			
+			System.out.println("ARCHIVOS EN EL SERVIDOR: ");
+			for (String string : disposable) {
+				System.out.println(string);
+			}
 			
 //			El usuario en la GUI selecciona un nombre (la variable 'selected')
 			String selected ="file1";
@@ -57,9 +74,15 @@ public class Client {
 			ArrayList<String> peers;
 			peers = i.iwant(selected);
 			
+			System.out.println("Peers con el archivo:");
+			for (String string : peers) {
+				System.out.println(string);
+			}
+			
 //			Por cada peer se hace un hilo
 //			for (int j=0; j<peers.size(); j++) {
 //				Un hilo
+				
 //			}
 			
 //			Y ES TODOOO
@@ -86,4 +109,8 @@ public class Client {
 //		Lista de los archivos en la base del cliente
 //		Se leen los archivos de la carpeta y se llena el arraylist
 	}
+//	
+//	public static ArrayList<String> repartir(){
+//		
+//	}
 }

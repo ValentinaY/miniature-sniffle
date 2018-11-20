@@ -23,10 +23,8 @@ public class ImplementationRMIServer extends UnicastRemoteObject implements IRMI
 	@Override
 	public ArrayList<String> getfiles() throws RemoteException {
 		ArrayList<String> files = new ArrayList<String>();
-		for (String string : names.keySet()) {
-			files.add(string);
-		}
-		// TODO Auto-generated method stub
+		System.out.println(names.size());
+		names.forEach((k,v) -> files.add(k));
 		return files;
 	}
 
@@ -34,11 +32,13 @@ public class ImplementationRMIServer extends UnicastRemoteObject implements IRMI
 	public boolean ihave(ArrayList<String> myfiles, String ip) throws RemoteException{
 		boolean answer =false;
 		for (String string : myfiles) {
+			System.out.println("Recibido del cliente "+ip+" el archivo: ");
 			System.out.println(string);
 			if(!names.containsKey(string)) {
 				names.put(string, new ArrayList<String>());
 			}
 			names.get(string).add(ip);
+			answer = true;
 		}
 		return answer;
 	}
