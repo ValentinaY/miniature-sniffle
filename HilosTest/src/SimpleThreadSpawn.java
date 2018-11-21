@@ -10,9 +10,10 @@ public SimpleThreadSpawn()
 
 static void ManejaHilos(int n) {
 	ArrayList<Thread>threads = new ArrayList<>();
+	ArrayList<Integer>codes = new ArrayList<>();
 	ArrayList<Thread>threads2 = new ArrayList<>();
 	for (int i = 0; i < n; i++) {
-	  Thread t = new SimpleThread();
+	  Thread t = new SimpleThread(codes);
 	  t.start();
 	  threads.add(t);
 	}
@@ -26,6 +27,11 @@ static void ManejaHilos(int n) {
 		System.err.println("Interrupted");
 		}
 	}
+	
+	for (int i = 0; i < codes.size(); i++) {
+		System.out.println("Imprimo codigos indice: "+i+" con dato de valor: "+codes.get(i));
+	}
+	
 	
 	System.out.println("Aqui reparto descargas");
 	for (int i = 0; i < n; i++) {
@@ -51,7 +57,7 @@ static void ManejaHilos(int n) {
 public static void main(String[] args) 
 {
 	
-	ManejaHilos(10);
+	ManejaHilos(3);
 	  
 
 
