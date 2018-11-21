@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -8,6 +9,7 @@ import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 //import com.sun.corba.se.impl.protocol.FullServantCacheLocalCRDImpl;
@@ -16,7 +18,7 @@ public class Client {
 //	Lista de los archivos disponibles en el pc actual
 	private static ArrayList<String> myfiles;
 //	Esta variable es quemada porque depende del sistema y la carpeta en donde esta el proyecto
-	private static String path = "/root/Documents/GitHub/miniature-sniffle/src/data";
+	private static String path = "/home/omar/eclipse-workspace/miniature-sniffle/src/data";
 	
 	public Client() {
 		// TODO Auto-generated constructor stub
@@ -150,6 +152,15 @@ public class Client {
 //				Se listan las lineas y se ordena el archivo (NO LO HICE :P)
 			ArrayList<String> strings = new ArrayList<String>();
 			System.out.println("Aqui unifico archivo");
+			
+			try {
+				escritor(strings,"NEWFILE.txt");
+			}
+			catch(Exception e) {}
+			
+			
+			
+			
 			for (ConnectionSend connectionSend : sends) {
 				strings.add(connectionSend.result);
 			}
@@ -159,6 +170,39 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static String getTokens(String str,int n) {
+	    ArrayList <String> tokens = new ArrayList<>();
+	    StringTokenizer tokenizer = new StringTokenizer(str, "-");
+	    while (tokenizer.hasMoreElements()) {
+	        tokens.add(tokenizer.nextToken());
+	    }
+	   return tokens.get(n);
+	}
+	
+	public static void escritor(ArrayList <String> lines,String name) throws Exception{
+		ArrayList <String> linesOrder=new ArrayList<>();
+		PrintWriter writer = new PrintWriter(name, "UTF-8");
+		
+		for(int i=0;i<lines.size();i++) {
+		linesOrder.add(" ");
+		System.out.println("Size of order"+linesOrder.size());
+		}
+			for(int i=0;i<lines.size();i++) {
+				String aux=lines.get(i);
+				int index;
+				index=Integer.parseInt(getTokens(aux,0));
+				linesOrder.set(index-1, getTokens(aux,1));
+			}
+		
+			for(int i=0;i<linesOrder.size();i++) {
+				System.out.println(i+linesOrder.get(i));
+				writer.println(linesOrder.get(i));
+			}
+			writer.close();
+	}
+	
 	
 	public static void fulllist() {
 		try {
