@@ -6,48 +6,21 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class Connection implements Runnable{
-	public ArrayList<Integer> lines;
-	public ArrayList<String> ports;
-	String ip;
-	String file;
-	public Connection(String ip, String file) {
-		lines = new ArrayList<Integer>();
-		ports = new ArrayList<String>();
-		ports.add("5051");
-		ports.add("5052");
-		ports.add("5053");
-		ports.add("5054");
-		ports.add("5055");
-		this.ip=ip;
-		this.file=file;
+public class Connection extends Thread{
+	public Connection() {
+		
 	}
 
 	@Override
 	public void run() {
-		int cont =0;
-		String servernameip ="rmi://"+ip+":"+ports.get(cont)+"/ABC";
-		boolean connected =false;
-		while(!connected) {
-			try {
-				IRMIClient i = (IRMIClient)(Naming.lookup(servernameip));
-				lines=i.whichline(file);
-				System.out.println("Lookup realizado con éxito.");
-				connected = true;
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NotBoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			cont++;
-			if(cont == 5) {
-				cont = 0;
-			}
+		try {
+			IRMIClient i= new ImplementationRMIClient();
+			Naming.rebind("rmi://localhost:5051/ABC", i);
+			System.out.println("Listening");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
 		}
 	}
 

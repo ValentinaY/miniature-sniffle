@@ -23,6 +23,10 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
+		
+		Connection c = new Connection();
+		
+		
 		String myip, ipserver;
 		myip="";
 		try {
