@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 //import com.sun.corba.se.impl.protocol.FullServantCacheLocalCRDImpl;
@@ -79,14 +80,78 @@ public class Client {
 				System.out.println(string);
 			}
 			
-//			Por cada peer se hace un hilo
-//			for (int j=0; j<peers.size(); j++) {
-//				Un hilo
+//			PARTE 2 
+			
+			ArrayList<Thread>threads = new ArrayList<>();
+			ArrayList<Thread>threads2 = new ArrayList<>();
+			ArrayList<ConnectionAsk> asks = new ArrayList<>();
+//			Por cada puerto se crea un hilo
+			for (int j = 0; j < peers.size(); j++) {
+//			Por cada puerto se ejecuta la clase ConnectionAsk que pregunta por las lineas
+				ConnectionAsk ask = new ConnectionAsk(peers.get(j), selected);
+				Thread tr = ask;
+				tr.start();
+//				Se agrega un ConnectionAsk a un arreglo para tener control sobre los datos
+//				Uno de los atributos de la clase ConnectionAsk es una lista de enteros
+				asks.add(ask);
+				threads.add(tr);
+			}
+			// all threads are now started
+			 
+			// later...
+			for (int j = 0; j < threads.size(); j++) {
+				try{((Thread) threads.get(j)).join();}
+				catch(InterruptedException e) 
+				{
+				System.err.println("Interrupted");
+				}
+			}
+			
+//			Después de que finalizan los hilos, el arreglo de ConnectionAsk mantiene los datos
+			
+			//Por cada una de las conexiones, se agrega al map la ip correspondiente a la lista de lineas.
+			int cont = 0;
+			HashMap<String, ArrayList<Integer>> list = new HashMap<String, ArrayList<Integer>>();
+//			Se hace un mapa con la lista de lineas por cada ip
+			for (ConnectionAsk connectionAsk : asks) {
+				list.put(asks.get(cont).ip, asks.get(cont).lines);
+				cont++;
+			}
+			
+//			Se hace la repartición (NO ESTÁ HECHA :P)
+			HashMap<String, ArrayList<Integer>> toshare = share(list);
+			
+			
+			ArrayList<ConnectionSend> sends = new ArrayList<ConnectionSend>();
+			System.out.println("Aqui reparto descargas");
+			for (int j = 0; j < peers.size(); j++) {
+					for (Integer inti : toshare.get(peers.get(j))) {
+							ConnectionSend send = new ConnectionSend(selected, inti, peers.get(j));
+							Thread t2 = send;
+							sends.add(send);
+							t2.start();
+							threads2.add(t2);
+					}
+				}
+				// all threads are now started
+				 
+				// later...
+				for (int j = 0; j < threads2.size(); j++) {
+					try{((Thread) threads2.get(j)).join();}
+					catch(InterruptedException e) 
+					{
+					System.err.println("Interrupted");
+					}
+				}
+			
+//				Se listan las lineas y se ordena el archivo (NO LO HICE :P)
+				ArrayList<String> strings = new ArrayList<String>();
+				System.out.println("Aqui unifico archivo");
+				for (ConnectionSend connectionSend : sends) {
+					strings.add(connectionSend.result);
+				}
 				
-//			}
-			
-//			Y ES TODOOO
-			
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,7 +175,16 @@ public class Client {
 //		Se leen los archivos de la carpeta y se llena el arraylist
 	}
 //	
-//	public static ArrayList<String> repartir(){
-//		
-//	}
+	public static HashMap<String, ArrayList<Integer> >share( HashMap<String, ArrayList<Integer> > hash ){
+		HashMap<String, ArrayList<Integer> > hashi = new HashMap<String, ArrayList<Integer> >();
+		for (String string : hashi.keySet()) {
+			
+		}
+		return hashi;
+	}
+	
+//	Este método recibe lineas con su índice y contenido Ej: '5-La violencia' y crea un archivo
+	public static void order(ArrayList<String> lines) {
+		
+	}
 }

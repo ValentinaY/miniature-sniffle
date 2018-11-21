@@ -6,21 +6,22 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class Connection implements Runnable{
-	public ArrayList<Integer> lines;
+public class ConnectionSend extends Thread{
 	public ArrayList<String> ports;
-	String ip;
-	String file;
-	public Connection(String ip, String file) {
-		lines = new ArrayList<Integer>();
+	public String file;
+	public String ip;
+	public int line;
+	public String result;
+	public ConnectionSend(String file, int line, String ip) {
 		ports = new ArrayList<String>();
 		ports.add("5051");
 		ports.add("5052");
 		ports.add("5053");
 		ports.add("5054");
 		ports.add("5055");
-		this.ip=ip;
+		this.line=line;
 		this.file=file;
+		this.ip = ip;
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class Connection implements Runnable{
 		while(!connected) {
 			try {
 				IRMIClient i = (IRMIClient)(Naming.lookup(servernameip));
-				lines=i.whichline(file);
+				result= i.sendme(file, line);
 				System.out.println("Lookup realizado con éxito.");
 				connected = true;
 			} catch (MalformedURLException e) {

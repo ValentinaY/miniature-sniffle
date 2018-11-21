@@ -24,7 +24,7 @@ public class ImplementationRMIClient implements IRMIClient {
 			while (((sCurrentLine = br.readLine()) != null)) {
 				String[] lines = sCurrentLine.split("-");
 				if( Integer.parseInt(lines[0]) == line) {
-					sreturn = lines[1];
+					sreturn = lines[0]+"-"+lines[1];
 				}
 			}
 		} catch (IOException e) {

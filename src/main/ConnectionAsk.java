@@ -6,12 +6,12 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class Connection implements Runnable{
+public class ConnectionAsk extends Thread{
 	public ArrayList<Integer> lines;
 	public ArrayList<String> ports;
-	String ip;
-	String file;
-	public Connection(String ip, String file) {
+	public String ip;
+	public String file;
+	public ConnectionAsk(String ip, String file) {
 		lines = new ArrayList<Integer>();
 		ports = new ArrayList<String>();
 		ports.add("5051");
