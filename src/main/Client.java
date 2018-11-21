@@ -119,37 +119,36 @@ public class Client {
 			}
 			
 //			Se hace la repartición (NO ESTÁ HECHA :P)
-			HashMap<String, ArrayList<Integer>> toshare = share(list);
+			HashMap<String, Integer> toshare = share(list);
 			
 			
 			ArrayList<ConnectionSend> sends = new ArrayList<ConnectionSend>();
 			System.out.println("Aqui reparto descargas");
-			for (int j = 0; j < peers.size(); j++) {
-					for (Integer inti : toshare.get(peers.get(j))) {
-							ConnectionSend send = new ConnectionSend(selected, inti, peers.get(j));
-							Thread t2 = send;
-							sends.add(send);
-							t2.start();
-							threads2.add(t2);
-					}
+			for (String ips : toshare.keySet()) {
+				ConnectionSend send = new ConnectionSend(selected, toshare.get(ips), ips);
+				Thread t2 = send;
+				sends.add(send);
+				t2.start();
+				threads2.add(t2);
+			}
+
+			// all threads are now started
+			 
+			// later...
+			for (int j = 0; j < threads2.size(); j++) {
+				try{((Thread) threads2.get(j)).join();}
+				catch(InterruptedException e) 
+				{
+				System.err.println("Interrupted");
 				}
-				// all threads are now started
-				 
-				// later...
-				for (int j = 0; j < threads2.size(); j++) {
-					try{((Thread) threads2.get(j)).join();}
-					catch(InterruptedException e) 
-					{
-					System.err.println("Interrupted");
-					}
-				}
-			
+			}
+		
 //				Se listan las lineas y se ordena el archivo (NO LO HICE :P)
-				ArrayList<String> strings = new ArrayList<String>();
-				System.out.println("Aqui unifico archivo");
-				for (ConnectionSend connectionSend : sends) {
-					strings.add(connectionSend.result);
-				}
+			ArrayList<String> strings = new ArrayList<String>();
+			System.out.println("Aqui unifico archivo");
+			for (ConnectionSend connectionSend : sends) {
+				strings.add(connectionSend.result);
+			}
 				
 				
 		} catch (Exception e) {
@@ -175,10 +174,28 @@ public class Client {
 //		Se leen los archivos de la carpeta y se llena el arraylist
 	}
 //	
-	public static HashMap<String, ArrayList<Integer> >share( HashMap<String, ArrayList<Integer> > hash ){
-		HashMap<String, ArrayList<Integer> > hashi = new HashMap<String, ArrayList<Integer> >();
-		for (String string : hashi.keySet()) {
-			
+	public static HashMap<String, Integer >share( HashMap<String, ArrayList<Integer> > hash ){
+		HashMap<String, Integer > hashi = new HashMap<String, Integer >();
+		String menor = "";
+		int menorint = 999;
+		HashMap<Integer, Boolean > assigned = new HashMap<Integer, Boolean>();
+		for (String string : hash.keySet()) {
+			for(Integer j : hash.get(string)) {
+				assigned.put(j, false);
+			}
+		}
+		boolean allassigned =false;
+		while(!allassigned) {
+			for (String string : hash.keySet()) {
+				if(hash.get(string).size() < menorint) {
+					menorint = hash.get(string).size();
+					menor = string;
+				}
+			}
+			for(Integer linesm : hash.get(menor)) {
+				hashi.put(menor, linesm);
+			}
+			hash.remove(menor);
 		}
 		return hashi;
 	}
